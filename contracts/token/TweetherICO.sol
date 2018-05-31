@@ -11,9 +11,12 @@ contract TweetherICO {
   TweetherToken token;
 
   uint256 public RATE = 1000; // 1 ETH = 1000 TWE
+  
+  address public owner;
 
   function TweetherICO(address _tokenAddr) public {
     token = TweetherToken(_tokenAddr);  
+    owner = msg.sender;
   }
 
   function () public payable {
@@ -24,6 +27,11 @@ contract TweetherICO {
 
   function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
     return _weiAmount.div(10 ** 18).mul(RATE);
+  }
+  
+  function withdraw() public {
+    require(owner == msg.sender());
+    msg.sender.send(this.balance);
   }
 
 }
